@@ -1,0 +1,76 @@
+[
+    {
+        "provider": "interactive_brokers",
+        "realtime": {
+            "host": "127.0.0.1",
+            "port": 7497,
+            "client_id": 1,
+            "symbol": "AAPL",
+            "use_sandbox": true
+        },
+        "historical": {
+            "host": "127.0.0.1",
+            "port": 7497,
+            "client_id": 1,
+            "symbol": "AAPL",
+            "duration": "1 D",
+            "bar_size": "1 min",
+            "use_sandbox": true
+        }
+    },
+    {
+        "provider": "alpaca",
+        "realtime": {
+            "url": "wss://stream.data.alpaca.markets/v2/{feed}",
+            "sandbox_url": "wss://stream.data.sandbox.alpaca.markets/v2/{feed}",
+            "api_key_env": "ALPACA_API_KEY",
+            "secret_key_env": "ALPACA_SECRET_KEY",
+            "feed": "iex",
+            "symbol": "AAPL",
+            "use_sandbox": true
+        },
+        "historical": {
+            "api_key_env": "ALPACA_API_KEY",
+            "secret_key_env": "ALPACA_SECRET_KEY",
+            "symbol": "AAPL",
+            "timeframe": "1Min",
+            "use_sandbox": true,
+            "sandbox_url": "https://paper-api.alpaca.markets",
+            "url": "https://api.alpaca.markets",
+            "data_url": "https://data.alpaca.markets/v2"
+        }
+    },
+    {
+        "provider": "coinbase_pro",
+        "realtime": {
+            "url": "wss://ws-feed.pro.coinbase.com",
+            "symbol": "BTC-USD",
+            "use_sandbox": true
+        },
+        "historical": {
+            "api_key_env": "COINBASE_PRO_API_KEY",
+            "secret_key_env": "COINBASE_PRO_SECRET_KEY",
+            "symbol": "BTC-USD",
+            "granularity": 3600,
+            "use_sandbox": true,
+            "url": "https://api.pro.coinbase.com"
+        }
+    },
+    {
+        "provider": "alpha_vantage",
+        "realtime": {
+            "api_key_env": "ALPHA_VANTAGE_API_KEY",
+            "symbol": "AAPL",
+            "function": "TIME_SERIES_INTRADAY",
+            "interval": "1min",
+            "url": "https://www.alphavantage.co/query"
+        },
+        "historical": {
+            "api_key_env": "ALPHA_VANTAGE_API_KEY",
+            "symbol": "AAPL",
+            "function": "TIME_SERIES_DAILY",
+            "outputsize": "full",
+            "url": "https://www.alphavantage.co/query"
+        }
+    }
+]

@@ -62,8 +62,8 @@ project_root/
 
 1. **Clone the repository**:
    ```sh
-   git clone https://github.com/yourusername/real_time_data_provider.git
-   cd real_time_data_provider
+   git clone git@github.com:ghudeihed/realtime_historical_data_provider.git
+   cd realtime_historical_data_provider
    ```
 
 2. **Create and activate a virtual environment**:

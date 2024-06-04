@@ -1,4 +1,4 @@
-from ib_insync import IB, util
+from ib_insync import IB, Contract, util
 import os
 from ..base_realtime_provider import BaseRealTimeDataProvider
 from utils.logging_wrapper import LoggingWrapper
@@ -7,19 +7,27 @@ logger = LoggingWrapper(__name__)
 
 class InteractiveBrokersRealTimeProvider(BaseRealTimeDataProvider):
     def __init__(self, **config):
-        self.host = config.get('host')
-        self.port = config.get('port')
-        self.client_id = config.get('client_id')
-        self.symbol = config.get('symbol')
+        required_keys = ['host', 'port', 'client_id', 'symbol']
+        if not all(key in config for key in required_keys):
+            logger.error("Initialization failed due to missing configuration parameters.")
+            raise ValueError("Missing configuration parameters.")
+        self.host = config['host']
+        self.port = config['port']
+        self.client_id = config['client_id']
+        self.symbol = config['symbol']
         self.ib = IB()
-        logger.info("IBProvider initialized")
+        if not self.ib.connect(self.host, self.port, clientId=self.client_id):
+            logger.error("Failed to connect to Interactive Brokers TWS API.")
+            raise ConnectionError("Could not connect to Interactive Brokers TWS API.")
+        logger.info("InteractiveBrokersRealTimeProvider initialized with config: %s", config)
 
     def connect(self):
         """
         Connect to the IB TWS or Gateway.
         """
         try:
-            self.ib.connect(self.host, self.port, clientId=self.client_id)
+            if not self.ib.isConnected():
+                self.ib.connect(self.host, self.port, clientId=self.client_id)
             logger.info("Connected to IB")
         except Exception as e:
             logger.error(f"Error connecting to IB: {e}")
@@ -30,7 +38,7 @@ class InteractiveBrokersRealTimeProvider(BaseRealTimeDataProvider):
         Subscribe to the specified symbol.
         """
         try:
-            contract = util.formSymbol(symbol)
+            contract = Contract(symbol=self.symbol, secType='STK', exchange='SMART', currency='USD')
             self.ib.qualifyContracts(contract)
             self.ib.reqMktData(contract, '', False, False)
             logger.info(f"Subscribed to {symbol}")
@@ -46,15 +54,6 @@ class InteractiveBrokersRealTimeProvider(BaseRealTimeDataProvider):
             logger.info(msg)
         except Exception as e:
             logger.error(f"Error processing message: {e}")
-
-    def process_message(self, msg):
-        """
-        Process a single message.
-        """
-        try:
-            logger.info(msg)
-        except Exception as e:
-            logger.error(f"Error processing individual message: {e}")
 
     def on_error(self, error):
         """
